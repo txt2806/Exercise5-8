@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 8: Demo about Form Control</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-light">
+
+  <div id="root" class="container py-5"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function FlightBookingForm() {
+      const [showAlert, setShowAlert] = useState(true);
+      const [formData, setFormData] = useState({
+        fullName: '',
+        address: '',
+        departure: 'Hà Nội',
+        destination: 'Hà Nội',
+        go: false,
+        return: false
+      });
+
+      const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+          ...formData,
+          [name]: type === 'checkbox' ? checked : value
+        });
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Dữ liệu submit:", formData);
+        alert("Đặt vé thành công! Kiểm tra dữ liệu ở Console tab.");
+      };
+
+      return (
+        <div class="card shadow-sm mx-auto" style={{ maxWidth: '600px', backgroundColor: '#fff' }}>
+          {showAlert && (
+            <div class="alert alert-warning alert-dismissible fade show m-0 rounded-top" role="alert" style={{ backgroundColor: '#fff3cd', borderColor: '#ffe69c' }}>
+              <button type="button" class="btn-close" onClick={() => setShowAlert(false)} aria-label="Close"></button>
+            </div>
+          )}
+
+          <div class="card-body p-4">
+            <h1 class="card-title h2 mb-4 fw-normal">Form đặt vé máy bay</h1>
+            
+            <form onSubmit={handleSubmit}>
+              {/* Họ tên */}
+              <div class="mb-3">
+                <label class="form-label text-secondary small">Họ tên</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-secondary-subtle">
+                    <i class="bi bi-person text-secondary"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    class="form-control border-secondary-subtle" 
+                    placeholder="Họ tên" 
+                  />
+                  <span class="input-group-text bg-light border-secondary-subtle text-secondary small">vnđ</span>
+                </div>
+                <div class="form-text text-muted small">Phải nhập 5 ký tự, in hoa....</div>
+              </div>
+
+              {/* Địa chỉ */}
+              <div class="mb-3">
+                <label class="form-label text-secondary small">Địa chỉ</label>
+                <input 
+                  type="text" 
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  class="form-control border-secondary-subtle" 
+                />
+                <div class="form-text text-muted small">Phải nhập 5 ký tự, in hoa....</div>
+              </div>
+
+              {/* Đi từ & Đến */}
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="form-label text-secondary small">Đi từ</label>
+                  <select 
+                    name="departure"
+                    value={formData.departure}
+                    onChange={handleChange}
+                    class="form-select border-secondary-subtle"
+                  >
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label text-secondary small">Đến</label>
+                  <select 
+                    name="destination"
+                    value={formData.destination}
+                    onChange={handleChange}
+                    class="form-select border-secondary-subtle"
+                  >
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Chọn chiều đi */}
+              <div class="mb-4">
+                <label class="form-label text-secondary small d-block">Chọn chiều đi (Khứ hồi)</label>
+                <div class="form-check mb-1">
+                  <input 
+                    type="checkbox" 
+                    name="go"
+                    id="chk-go"
+                    checked={formData.go}
+                    onChange={handleChange}
+                    class="form-check-input border-secondary-subtle" 
+                  />
+                  <label class="form-check-label text-secondary small" htmlFor="chk-go">Đi</label>
+                </div>
+                <div class="form-check">
+                  <input 
+                    type="checkbox" 
+                    name="return"
+                    id="chk-return"
+                    checked={formData.return}
+                    onChange={handleChange}
+                    class="form-check-input border-secondary-subtle" 
+                  />
+                  <label class="form-check-label text-secondary small" htmlFor="chk-return">Về</label>
+                </div>
+              </div>
+
+              {/* Button Submit */}
+              <button type="submit" class="btn btn-primary w-100 py-2 rounded-1 fw-medium">Đặt vé</button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<FlightBookingForm />);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
